@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EA535530-9DC6-4AC7-80D0-CA2CC5C9446E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WznGwent</RootNamespace>
+    <AssemblyName>WznGwent</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EntranceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConfigWindow.xaml.cs">
+      <DependentUpon>ConfigWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl.cs" />
+    <Compile Include="EntranceWindow.xaml.cs">
+      <DependentUpon>EntranceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ModelHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Agile.png" />
+    <Resource Include="images\Berserker.png" />
+    <Resource Include="images\BitingFrost.png" />
+    <Resource Include="images\ClearWeather.png" />
+    <Resource Include="images\CloseCombat.png" />
+    <Resource Include="images\CommanderHorn.png" />
+    <Resource Include="images\Decoy.png" />
+    <Resource Include="images\Hero.png" />
+    <Resource Include="images\ImpenetrableFog.png" />
+    <Resource Include="images\Mardroeme.png" />
+    <Resource Include="images\Medic.png" />
+    <Resource Include="images\MoraleBoost.png" />
+    <Resource Include="images\Muster.png" />
+    <Resource Include="images\Ranged.png" />
+    <Resource Include="images\Scorch.png" />
+    <Resource Include="images\Siege.png" />
+    <Resource Include="images\SkelligeStorm.png" />
+    <Resource Include="images\Spy.png" />
+    <Resource Include="images\TightBond.png" />
+    <Resource Include="images\TorrentialRain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\cardDescriptionHero.png" />
+    <Resource Include="images\cardDescription.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\cardAmount.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\cardAmountSel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\closedCombatTab.png" />
+    <Resource Include="images\closedCombatTabSel.png" />
+    <Resource Include="images\heroTab.png" />
+    <Resource Include="images\heroTabSel.png" />
+    <Resource Include="images\magicTab.png" />
+    <Resource Include="images\magicTabSel.png" />
+    <Resource Include="images\rangedTab.png" />
+    <Resource Include="images\rangedTabSel.png" />
+    <Resource Include="images\siegeTab.png" />
+    <Resource Include="images\siegeTabSel.png" />
+    <Resource Include="images\weatherTab.png" />
+    <Resource Include="images\weatherTabSel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Null.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\HeroCorner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Tw3_cardart_neutral_avallach.png" />
+    <Resource Include="images\Tw3_cardart_neutral_ciri.png" />
+    <Resource Include="images\Tw3_cardart_neutral_dandelion.png" />
+    <Resource Include="images\Tw3_cardart_neutral_emiel.png" />
+    <Resource Include="images\Tw3_cardart_neutral_geralt.png" />
+    <Resource Include="images\Tw3_cardart_neutral_geralt_dlc.png" />
+    <Resource Include="images\Tw3_cardart_neutral_triss.png" />
+    <Resource Include="images\Tw3_cardart_neutral_triss_dlc.png" />
+    <Resource Include="images\Tw3_cardart_neutral_vesemir.png" />
+    <Resource Include="images\Tw3_cardart_neutral_vesemir_dlc.png" />
+    <Resource Include="images\Tw3_cardart_neutral_villen.png" />
+    <Resource Include="images\Tw3_cardart_neutral_villen_dlc.png" />
+    <Resource Include="images\Tw3_cardart_neutral_yennefer.png" />
+    <Resource Include="images\Tw3_cardart_neutral_zoltan.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_ballista.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_ballista_1.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_banner_nurse.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_blue_stripes.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_catapult_1.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_crinfrid.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_dethmold.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_dijkstra.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_esterad.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_kaedwen_siege.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_keira.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_leader_foltest_bronze.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_leader_foltest_copper.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_leader_foltest_gold.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_leader_foltest_silver.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_natalis.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_philippa.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_poor_infantry.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_redania.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_redania_1.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_sabrina.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_sheala.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_sheldon.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_siege_tower.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_siegfried.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_stennis.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_thaler.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_trebuchet.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_trebuchet_1.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_vernon.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_ves.png" />
+    <Resource Include="images\Tw3_cardart_northernrealms_yarpen.png" />
+    <Resource Include="images\Tw3_cardart_northern_realms_foltest_son_of_medell.png" />
+    <Resource Include="images\Tw3_cardart_skellige_special_skellige_storm.png" />
+    <Resource Include="images\Tw3_cardart_special_clearsky.png" />
+    <Resource Include="images\Tw3_cardart_special_dummy.png" />
+    <Resource Include="images\Tw3_cardart_special_fog.png" />
+    <Resource Include="images\Tw3_cardart_special_frost.png" />
+    <Resource Include="images\Tw3_cardart_special_horn.png" />
+    <Resource Include="images\Tw3_cardart_special_rain.png" />
+    <Resource Include="images\Tw3_cardart_special_scorch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\deckAmount.png" />
+    <Resource Include="images\heroAmount.png" />
+    <Resource Include="images\powerAmount.png" />
+    <Resource Include="images\unitsAmount.png" />
+    <Resource Include="images\ununitsAmount.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Tw3_gwent_deck_Northern_Realms.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Tw3_gwent_deck_Northern_Realms.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

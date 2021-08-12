@@ -1,0 +1,15 @@
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\bin\Debug\Laboratory.exe.config
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\bin\Debug\Laboratory.exe
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\bin\Debug\Laboratory.pdb
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\MainWindow.g.cs
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\App.g.cs
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory_MarkupCompile.cache
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory_MarkupCompile.lref
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\MainWindow.baml
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.g.resources
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.Properties.Resources.resources
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.csproj.GenerateResource.cache
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.csproj.CoreCompileInputs.cache
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.exe
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.pdb
+C:\Users\wzhin\source\repos\WznGwent\Laboratory\obj\Debug\Laboratory.csproj.AssemblyReference.cache

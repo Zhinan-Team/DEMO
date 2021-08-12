@@ -1,0 +1,329 @@
+﻿<Window x:Class="WznGwent.EntranceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WznGwent"
+        mc:Ignorable="d"
+        Title="EntranceWindow" Height="450" Width="800">
+    <!--以Canvas为Root作画与动画-->
+    <Canvas Name="backgroundCanvas" Background="#FF52B0EF">
+        <Canvas.Resources>
+            <Style TargetType="{x:Type Button}">
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="2x">
+                                <DoubleAnimation From="1" To="0.3" Storyboard.TargetProperty="Opacity" 
+                                                 AutoReverse="True" Duration="0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="customBtn" TargetType="{x:Type Button}">
+                <Setter Property="FontWeight" Value="Bold"></Setter>
+                <Style.Triggers>
+                    <Trigger Property="Margin" Value="4">
+                        <Setter Property="FontStyle" Value="Italic"></Setter>
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="Margin" Value="4"/>
+                            <Condition Property="Content" Value="Config" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" Value="BurlyWood"></Setter>
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+        </Canvas.Resources>
+        <!--#region Canvas动画定义，
+        相当于元素的属性，必须写在子元素定义前面-->
+        <Canvas.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation 
+                            From="#FF52B0EF" To="#FF007ACC" Duration="0:0:15"  
+                            Storyboard.TargetProperty="(Canvas.Background).(SolidColorBrush.Color)" 
+                            AutoReverse="True" RepeatBehavior="Forever"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Canvas.Triggers>
+        <!-- #endregion -->
+
+        <!--#region Canvas不在Canvas子布局容器中的子元素动画绘制，
+        子元素都要写属性在后面，如果写在Canvas.Triggers前面会报错。这意味着所有布局和布局带来的效果都需要手动实现！比如居中效果-->
+        <!--RenderTransform下面只安排一个Transform，可以不通过名字，直接通过属性路径来引用；这个动画模仿水纹
+        波荡，颜色透明化时间要配合好，否则波纹会突然消失-->
+        <Ellipse Name="fillEllipse" Width="10" Height="10" Fill="#007ACC" Canvas.Left="-200" Canvas.Top="-200">
+            <Ellipse.RenderTransform>
+                <ScaleTransform />
+            </Ellipse.RenderTransform>
+            <Ellipse.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Ellipse.RenderTransform).(ScaleTransform.ScaleX)"
+                                From="0" To="100" Duration="0:0:20"
+                                RepeatBehavior="Forever"/>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Ellipse.RenderTransform).(ScaleTransform.ScaleY)"
+                                From="0" To="100" Duration="0:0:20"
+                                RepeatBehavior="Forever"/>
+                            <ColorAnimation 
+                                Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)" 
+                                From="#007ACC" To="Transparent"  Duration="0:0:20"
+                                RepeatBehavior="Forever"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Ellipse.Triggers>
+        </Ellipse>
+        <!--RenderTransform下面多个Transform，需要用TransformGroup。这样就不能直接通过属性路径来引用需要通过name；
+        这个动画既放大圆形，又移动它，并且让它围绕原点旋转造成随机效果，同时让其延迟开始2秒以和另一个ellipse错开；
+        Transform中也可以为动画设置一些属性，比如这里的旋转中心点设置为了(100,100)-->
+        <Ellipse Width="20" Height="20" StrokeThickness="10" Stroke="DarkBlue"  Canvas.Left="-200" Canvas.Top="30">
+            <Ellipse.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform x:Name="ellipseTranTrans"/>
+                    <RotateTransform x:Name="ellipseRotaTrans"  CenterX="100" CenterY="100"/>
+                </TransformGroup>
+            </Ellipse.RenderTransform>
+            <Ellipse.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="ellipseTranTrans"
+                                Storyboard.TargetProperty="X"
+                                To="-10" Duration="0:0:15" AutoReverse="True"
+                                RepeatBehavior="Forever"/>
+                            <DoubleAnimation
+                                Storyboard.TargetName="ellipseTranTrans"
+                                Storyboard.TargetProperty="Y"  AutoReverse="True"
+                                To="-100" Duration="0:0:15"
+                                RepeatBehavior="Forever"/>
+                            <DoubleAnimation
+                                BeginTime="0:0:2"
+                                Storyboard.TargetProperty="Width"
+                                From="0" To="1000" Duration="0:0:30"
+                                RepeatBehavior="Forever"/>
+                            <DoubleAnimation
+                                BeginTime="0:0:2"
+                                Storyboard.TargetProperty="Height"
+                                From="0" To="1000" Duration="0:0:30"
+                                RepeatBehavior="Forever"/>
+                            <ColorAnimation 
+                                BeginTime="0:0:2"
+                                Storyboard.TargetProperty="(Ellipse.Stroke).(SolidColorBrush.Color)" 
+                                From="AliceBlue" To="Transparent"  Duration="0:0:30"
+                                RepeatBehavior="Forever"/>
+                            <DoubleAnimation
+                                Storyboard.TargetName="ellipseRotaTrans"
+                                Storyboard.TargetProperty="Angle"
+                                To="-360" Duration="0:0:15"
+                                RepeatBehavior="Forever"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Ellipse.Triggers>
+        </Ellipse>
+        <!--对多边形构成的三角形进行扭曲(Skew)，颜色的透明化和其他动画配合，形成不突兀的组合循环动画-->
+        <Polyline Points="0,0 100,0 0,100 0,0 " Margin="-10,-10,0,0" Fill="Blue" >
+            <Polyline.RenderTransform>
+                <TransformGroup>
+                    <SkewTransform x:Name="triangleSkewTrans"/>
+                    <ScaleTransform x:Name="triangleScalTrans"/>
+                </TransformGroup>
+            </Polyline.RenderTransform>
+            <Polyline.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames
+                                Storyboard.TargetName="triangleScalTrans" Storyboard.TargetProperty="ScaleX"
+                                Duration="0:0:30" RepeatBehavior="Forever" >       
+                                <LinearDoubleKeyFrame Value="30" KeyTime="0:0:5" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <ColorAnimation 
+                                Storyboard.TargetProperty="(Polyline.Fill).(SolidColorBrush.Color)" 
+                                From="#007ACC" To="Transparent"  Duration="0:0:30"
+                                RepeatBehavior="Forever"/>
+                            <DoubleAnimation 
+                                Storyboard.TargetName="triangleSkewTrans" Storyboard.TargetProperty="AngleX"
+                                To="90"  Duration="0:0:30"
+                                RepeatBehavior="Forever"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Polyline.Triggers>
+        </Polyline>
+        <Rectangle Width="100" Height="10" Fill="#FF52B0EF">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform x:Name="ellipseAppleTranTrans"/>
+                    <ScaleTransform x:Name="ellipseAppleScalTrans"/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+            <Rectangle.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!--这里扩展（scale）ScaleX、ScaleY和之前扩展Width的区别在于Scale的所有元素
+                            都会被放大，包括border会一起同比例变粗；ScaleY和ScaleX的值表示倍数；-->
+                            <DoubleAnimation
+                                Storyboard.TargetName="ellipseAppleScalTrans" Storyboard.TargetProperty="ScaleY"
+                                From="0" To="1"  Duration="0:0:10" RepeatBehavior="Forever" >
+                            </DoubleAnimation>
+                            <!--用关键帧动画，即将动画更加细化一个属性的动画，将一幕剧再细分，但这要求使用
+                            基于数学曲线的动画从X轴弹下来-->
+                            <DoubleAnimationUsingKeyFrames  
+                                Storyboard.TargetName="ellipseAppleTranTrans" Storyboard.TargetProperty="X" 
+                                RepeatBehavior="Forever" Duration="00:00:10">
+                                <!--闪现，KeyTime表明了在此刻时应该达到的状态-->
+                                <DiscreteDoubleKeyFrame Value="0" KeyTime="0:0:0" />
+                                <!--这句是确保整个图形在被scale时能够压在X=0上-->
+                                <LinearDoubleKeyFrame Value="100" KeyTime="0:0:3" />
+                                <!--KeySpline就是曲线定义两个控制点的值，具体没去搞懂-->
+                                <SplineDoubleKeyFrame KeySpline="0.6,0.0,0.9,0.0" Value="0" KeyTime="0:0:8" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <!--在DoubleAnimation使用基于数学函数/曲线的动画-->
+                            <DoubleAnimation  
+                                Storyboard.TargetName="ellipseAppleTranTrans" Storyboard.TargetProperty="Y"
+                                RepeatBehavior="Forever" Duration="00:00:10" To="300">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <!--边弹边压缩-->
+                            <DoubleAnimationUsingKeyFrames
+                                Storyboard.TargetName="ellipseAppleScalTrans" Storyboard.TargetProperty="ScaleX"
+                                RepeatBehavior="Forever" >
+                                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:10" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Rectangle.Triggers>
+        </Rectangle>
+
+        <!--M：移动的点，A：长，宽 旋转角度 大小弧 顺逆时针 终点，Z:封闭；StrokeDashArray：虚长 实长
+        M11：X放大；M22:Y放大；(M21.M12):向量旋转；OffsetX，OffsetY：平移-->
+        <Path Stroke="#FF52B0EF" StrokeDashArray="5 2" Fill="Transparent" StrokeThickness="3"
+              Data="M 50,60 A 100,100 0 1 1 49,60 Z
+                    M 50,80 A 80,80 0 1 1 49,80 Z
+                    M 20,110 40,90 55,90 
+                    A 5,5 0 0 1 60,95
+                    M 60,95 60,200 80,200 80,220 20,220 20,200 40,200 40,120 20,140 20,110">
+            <Path.LayoutTransform>
+                <MatrixTransform>
+                    <MatrixTransform.Matrix>
+                        <Matrix M11="1" M22="1" M21="0.5" M12="-0.5" OffsetX="100" OffsetY="100"/>
+                    </MatrixTransform.Matrix>
+                </MatrixTransform>
+            </Path.LayoutTransform>
+        </Path>
+        <!-- #endregion -->
+
+        <!--#region Canvas布局定义，
+        -->
+        <Grid>
+            <Grid.Resources>
+                <local:divideDoubleConverter x:Key="networkBtnConverter"/>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition MinWidth="100">
+                    <ColumnDefinition.Width>
+                        <!--一种Binding写法-->
+                        <Binding ElementName="backgroundCanvas" Path="ActualWidth" Mode="OneWay" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.Converter>
+                                <local:divideDoubleConverter/>
+                            </Binding.Converter>
+                            <Binding.ConverterParameter>
+                                5
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </ColumnDefinition.Width>
+                </ColumnDefinition>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--通过数据绑定实现布局组件的横向stretch，因为动画要用canvas嘛，那这种只有自己实现了-->
+            <Grid.Width>
+                <Binding ElementName="backgroundCanvas" Path="ActualWidth" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+            </Grid.Width>
+            <Grid.Height>
+                <Binding ElementName="backgroundCanvas" Path="ActualHeight" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+            </Grid.Height>
+            <Button Content="Play" Margin="4" Grid.Row="1" Grid.Column="1" x:Name="playBtn">
+                <!--数据绑定与动画，数据源是动画的属性，fillEllipse的填充色被做了动画，和这里的rect的背景色绑定-->
+                <Button.Background>
+                    <Binding ElementName="fillEllipse" Path="Fill" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+                </Button.Background>
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform x:Name="btnPlayTranTrans"/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!--在DoubleAnimation使用基于数学函数/曲线的动画，RepeatBehavior1x表示1次，1表示1秒内重复，
+                                这里的From是相对父容器的原点位置-->
+                                <DoubleAnimation  
+                                Storyboard.TargetName="btnPlayTranTrans" Storyboard.TargetProperty="Y"
+                                RepeatBehavior="1x" Duration="00:00:2" From="-100">
+                                    <DoubleAnimation.EasingFunction>
+                                        <BounceEase  Bounces="10" Bounciness="2" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+            <!--binding的inline写法-->
+            <Button Content="Network" Grid.Row="2" Grid.Column="1" Margin="4" Style="{StaticResource customBtn}"
+                Width="{Binding ActualWidth, Converter={StaticResource networkBtnConverter}, ConverterParameter=2, ElementName=playBtn, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                <Button.RenderTransform>
+                    <TranslateTransform x:Name="btnNetworkTranTrans"  />
+                </Button.RenderTransform>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimationUsingPath
+                                Storyboard.TargetName="btnNetworkTranTrans" Source="X"
+                                Storyboard.TargetProperty="X" Duration="0:0:10">  
+                                    <DoubleAnimationUsingPath.PathGeometry>
+                                        <PathGeometry Figures="M 0,0 20,-20 40,-20 40,200 60,200 60,220 0,220 0,200 20,200 20,0 0,30 0,0" />  
+                                    </DoubleAnimationUsingPath.PathGeometry>
+                                </DoubleAnimationUsingPath>
+                                <DoubleAnimationUsingPath
+                                Storyboard.TargetName="btnNetworkTranTrans" Source="Y"
+                                Storyboard.TargetProperty="Y" Duration="0:0:10">
+                                    <DoubleAnimationUsingPath.PathGeometry>
+                                        <PathGeometry Figures="M 0,0 20,-20 40,-20 40,200 60,200 60,220 0,220 0,200 20,200 20,0 0,30 0,0" />
+                                    </DoubleAnimationUsingPath.PathGeometry>
+                                </DoubleAnimationUsingPath>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Content="Config" Margin="4" Grid.Row="3" Grid.Column="1" Style="{StaticResource customBtn}" Click="configBtn_click" />
+        </Grid>
+        <!-- #endregion -->
+    </Canvas>
+</Window>
