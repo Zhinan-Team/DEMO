@@ -214,11 +214,23 @@ namespace WznGwent
                 this.PART_Root.RenderTransform = new TranslateTransform();
             }
 
+            ScaleTransform scaleTransform = new();
+            if (PART_CurrentItem.RenderTransform is ScaleTransform scaleTransformTemp)
+                scaleTransform = scaleTransformTemp;
+            else PART_CurrentItem.RenderTransform = scaleTransform;
+            
+
             var story = AnimationFactory.Instance.GetAnimation(this.PART_Root, toValue, fromValue);
             story.Completed += (s, e) =>
             {
                 this.RefreshViewPort(this.SelectedIndex);
             };
+            
+            DoubleAnimation doubleAnimation = new();
+            doubleAnimation.To = 1.5;
+            doubleAnimation.Duration = story.Duration;
+            doubleAnimation.BeginAnimation(ScaleTransform.ScaleXProperty,doubleAnimation);
+            doubleAnimation.BeginAnimation(ScaleTransform.ScaleYProperty,doubleAnimation);
             story.Begin();
         }
 
@@ -281,6 +293,9 @@ namespace WznGwent
             this.PART_Root = this.GetTemplateChild("PART_Root") as FrameworkElement;
             this.PART_Container = this.GetTemplateChild("PART_Container") as FrameworkElement;
 
+            PART_CurrentItem.RenderTransformOrigin = new Point(0.5, 0.5);
+            PART_CurrentItem.RenderTransform = new ScaleTransform(1.5, 1.5);
+            
             this.Loaded += this.OnLoaded;
             this.SizeChanged += this.OnSizeChanged;
             this.PART_Root.ManipulationStarting += this.OnRootManipulationStarting;
