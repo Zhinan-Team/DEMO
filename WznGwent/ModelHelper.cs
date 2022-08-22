@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows;
+using System.Globalization;
+
 namespace WznGwent
 {
     public enum CardFaceAbilities { Null, Berserker, Medic, Morale, Muster, Scorch, Spy, Bond, TorrentialRain, ImpenetrableFog, BitingFrost, SkelligeStorm,
@@ -492,4 +494,64 @@ namespace WznGwent
             throw new NotImplementedException();
         }
     }
+    [ValueConversion(typeof(double), typeof(double[]))]
+
+    #region Converters used in PlayWindow
+    public class RoundMathConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length < 2)
+            {
+                throw new NotImplementedException();
+            }
+            double.TryParse(values[0].ToString(), out double d1);
+            double.TryParse(values[1].ToString(), out double d2);
+            if (d1 * d2 == 0)
+            {
+                return double.NaN;  //Not a Number
+            }
+            return Math.Min(d1, d2);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    [ValueConversion(typeof(System.Windows.CornerRadius), typeof(double[]))]
+    public class RoundRadiusConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length < 2)
+            {
+                throw new NotImplementedException();
+            }
+            double.TryParse(values[0].ToString(), out double d1);
+            double.TryParse(values[1].ToString(), out double d2);
+            return new CornerRadius(Math.Min(d1, d2) * 1 / 2);
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class CardWidthInPlayWinConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double.TryParse(value.ToString(), out double winWidth);
+            return winWidth / 10;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    #endregion
+
+
 }

@@ -265,7 +265,7 @@
             <Grid.Height>
                 <Binding ElementName="backgroundCanvas" Path="ActualHeight" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
             </Grid.Height>
-            <Button Content="Play" Margin="4" Grid.Row="1" Grid.Column="1" x:Name="playBtn">
+            <Button Content="Play" Margin="4" Grid.Row="1" Grid.Column="1" x:Name="playBtn" Click="playBtn_Click">
                 <!--数据绑定与动画，数据源是动画的属性，fillEllipse的填充色被做了动画，和这里的rect的背景色绑定-->
                 <Button.Background>
                     <Binding ElementName="fillEllipse" Path="Fill" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />

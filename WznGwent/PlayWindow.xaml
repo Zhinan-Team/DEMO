@@ -1,0 +1,511 @@
+﻿<Window x:Class="WznGwent.PlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WznGwent"
+        mc:Ignorable="d"
+        Title="PlayWindow" Name="rootWindow" Height="550" Width="840" MinHeight="550" MinWidth="840" FontSize="11">
+    <Grid Background="#deb887">
+        <Grid.Resources>
+            <!--Converters-->
+            <local:imageDirectoryConverter x:Key="imageDirConverter"/>
+            <local:cardWidthConverter x:Key="cardWidthConverter"/>
+            <local:toVisibilityConverter x:Key="elementVisibilityConverter"/>
+            <local:AbilityEllipseRowConverter x:Key="abilityEllipseRowConverter"/>
+            <local:basedCardWidthConverter x:Key="basedCardWidthConverter"/>
+            <local:remainingCardsConverter x:Key="remainingCardsConverter"/>
+            <local:CardCollapsedConverter x:Key="cardCollapsedConverter"/>
+            <local:LimitTipVisibilityConverter x:Key="limitTipVisibilityConverter"/>
+            <local:BlurConverter x:Key="blurConverter"/>
+            <local:InfoColorConverter x:Key="infoColorConverter"/>
+            <local:RemainingCardsShowConverter x:Key="remainingCardsShowConverter"/>
+            <local:SaveEnablityConverter x:Key="saveEnablityConverter"/>
+            <local:ColorConverter x:Key="colorConverter"/>
+            <local:CardWidthInPlayWinConverter x:Key="cardWidthPlayConverter"/>
+            <!--### ANIMATION STYLE ###-->
+            <!--鼠标悬停牌面放大动画-->
+            <Style x:Key="MouseOverCard" TargetType="FrameworkElement">
+                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1" ScaleY="1"/>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                     BeginTime="00:00:00" Duration="00:00:0.1" To="1.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <PowerEase Power="1" EasingMode="EaseIn"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                     BeginTime="00:00:00" Duration="00:00:01" To="1.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <PowerEase Power="1" EasingMode="EaseIn"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                     BeginTime="00:00:00" Duration="00:00:01">
+                                        <DoubleAnimation.EasingFunction>
+                                            <PowerEase Power="1" EasingMode="EaseInOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                     BeginTime="00:00:00" Duration="00:00:01">
+                                        <DoubleAnimation.EasingFunction>
+                                            <PowerEase Power="1" EasingMode="EaseInOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <!--TODO:鼠标悬停打牌区边框变色动画-->
+            <Style x:Key="borderAnimation" TargetType="Border">
+                
+            </Style>
+            <!--### DATA TEMPLATE ###-->
+            <!--我的牌堆里的牌面模板-->
+            <DataTemplate DataType="{x:Type local:CardFace}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <!--<ColumnDefinition Width="10"/>-->
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="cardFaceSide" BorderBrush="#663333" BorderThickness="2"
+                            CornerRadius="2" Padding="0" MouseLeftButtonUp="myCardSetClick">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding Face, Converter={StaticResource imageDirConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border.Background>
+                        <Border.Width>
+                            <!--<Binding ElementName="myCardListBorder" Path="ActualWidth" Mode="OneWay" Converter="{StaticResource cardWidthPlayConverter}" UpdateSourceTrigger="PropertyChanged"/>-->
+                            <Binding RelativeSource="{RelativeSource AncestorType=Border, AncestorLevel=1}" Path="ActualWidth" Mode="OneWay" Converter="{StaticResource cardWidthPlayConverter}" UpdateSourceTrigger="PropertyChanged"/>
+                        </Border.Width>
+                        <!--<Border.Height>
+                            --><!--<Binding ElementName="myCardListBorder" Path="ActualHeight" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>--><!--
+                        </Border.Height>-->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="6*"/>
+                                <!--<RowDefinition Height="2*"/>-->
+                            </Grid.RowDefinitions>
+                            <Grid.OpacityMask>
+                                <VisualBrush Visual="{Binding ElementName=radiusMask}" />
+                            </Grid.OpacityMask>
+                            <Border Name="radiusMask" Background="Black" BorderBrush="Transparent" BorderThickness="0.1" CornerRadius="6">
+                            </Border>
+                            <Grid  Name="faceGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="{Binding Face, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                                </Grid.Background>
+                                <Canvas>
+                                    <Image Source="images\HeroCorner.png" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding Hero, Converter={StaticResource elementVisibilityConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged,ConverterParameter='heroCardAbility'}">
+                                        <Image.Height>
+                                            <Binding ElementName="cardFaceSide" Path="ActualWidth" Mode="OneWay" ConverterParameter="0.5" Converter="{StaticResource basedCardWidthConverter}" UpdateSourceTrigger="PropertyChanged" />
+                                        </Image.Height>
+                                    </Image>
+                                </Canvas>
+                                <Ellipse Visibility="{Binding Power, Converter={StaticResource elementVisibilityConverter},ConverterParameter=powerElements, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="0"  
+                                     StrokeThickness="{Binding ActualWidth, ElementName=cardFaceSide, Converter={StaticResource basedCardWidthConverter}, ConverterParameter=0.02, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                                     Stroke="Chocolate" Margin="0">
+                                    <Ellipse.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0.5,1">
+                                            <GradientStop Color="{Binding Hero, Converter={StaticResource colorConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Offset="0.55" />
+                                            <GradientStop Color="Gray" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Label Visibility="{Binding Power, Converter={StaticResource elementVisibilityConverter}, Mode=OneWay,ConverterParameter=powerElements,UpdateSourceTrigger=PropertyChanged}" Content="{Binding Power, Mode=TwoWay}" 
+                                   Foreground="{Binding Hero, Converter={StaticResource colorConverter}, Mode=OneWay,ConverterParameter=reverse, UpdateSourceTrigger=PropertyChanged}" FontWeight="Medium"
+                                   Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Label.FontSize>
+                                        <Binding ElementName="cardFaceSide" Path="ActualWidth" Mode="OneWay" ConverterParameter="cardText" Converter="{StaticResource basedCardWidthConverter}" UpdateSourceTrigger="PropertyChanged" />
+                                    </Label.FontSize>
+                                </Label>
+
+                                <Ellipse Visibility="{Binding Range, Converter={StaticResource elementVisibilityConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="2" 
+                                     StrokeThickness="{Binding ActualWidth, ElementName=cardFaceSide, Converter={StaticResource basedCardWidthConverter}, ConverterParameter=0.02, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                                     Stroke="Chocolate" Margin="1" >
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Range, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"></ImageBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Ellipse Visibility="{Binding Ability, Converter={StaticResource elementVisibilityConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="0" 
+                                     StrokeThickness="{Binding ActualWidth, ElementName=cardFaceSide, Converter={StaticResource basedCardWidthConverter}, ConverterParameter=0.02, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                                     Stroke="Chocolate" Margin="1">
+                                    <Grid.Row>
+                                        <MultiBinding Converter="{StaticResource abilityEllipseRowConverter}" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" >
+                                            <Binding Path="Ability" />
+                                            <Binding Path="Range" />
+                                        </MultiBinding>
+                                    </Grid.Row>
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Ability, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"></ImageBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Grid>
+                            <!--<Border  Grid.Row="1" BorderThickness="{Binding ActualWidth, ElementName=currentCard, Converter={StaticResource basedCardWidthConverter},ConverterParameter='splitBoard', Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" BorderBrush="SaddleBrown">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="6*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="{Binding Hero, Converter={StaticResource imageDirConverter},ConverterParameter='heroCrad', Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                                    </Grid.Background>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}"  FontSize="{Binding ActualWidth, ElementName=currentCard, Mode=OneWay, ConverterParameter='cardText', Converter={StaticResource basedCardWidthConverter}, UpdateSourceTrigger=PropertyChanged}"
+                                           Foreground="Maroon" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" Padding="0"
+                                           Margin="{Binding ActualWidth, ElementName=currentCard, Mode=OneWay, ConverterParameter='0.04', Converter={StaticResource basedCardWidthConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Grid Grid.Column="0" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="2*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal" Visibility="{Binding Faction, Converter={StaticResource elementVisibilityConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                                            <Image Source="images\cardAmount.png" VerticalAlignment="Center">
+                                                <Image.Height>
+                                                    <Binding ElementName="currentCard" Path="ActualWidth" Mode="OneWay" ConverterParameter="0.1" Converter="{StaticResource basedCardWidthConverter}" UpdateSourceTrigger="PropertyChanged" />
+                                                </Image.Height>
+                                            </Image>
+
+                                            <Label VerticalAlignment="Center" Padding="0" Margin="0" Content="×" Foreground="#5A4424">
+                                                <Label.FontSize>
+                                                    <Binding ElementName="currentCard" Path="ActualWidth" Mode="OneWay" ConverterParameter="cardText" Converter="{StaticResource basedCardWidthConverter}" UpdateSourceTrigger="PropertyChanged" />
+                                                </Label.FontSize>
+                                            </Label>
+                                            <TextBlock  Name="remainingAmountLabel" Text="{Binding Amount, Mode=TwoWay,Converter={StaticResource remainingCardsConverter}, UpdateSourceTrigger=PropertyChanged}" 
+                                                    Foreground="#5A4424" TextAlignment="Center" Visibility="Collapsed" Tag="{Binding Limit, Mode=OneTime}" VerticalAlignment="Center" />
+                                            <TextBlock Foreground="#5A4424" TextAlignment="Center"
+                                                    Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}},Path=Tag,Converter={StaticResource elementVisibilityConverter},ConverterParameter='remaining'}" 
+                                                    VerticalAlignment="Center">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource remainingCardsShowConverter}" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" >
+                                                        <Binding Path="Amount" />
+                                                        <Binding Path="Limit" />
+                                                        <Binding Path="Tag" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}}"/>
+                                                    </MultiBinding>
+                                                    --><!--<Binding ElementName="remainingAmountLabel" Path="Text" Mode="OneWay" Converter="{StaticResource remainingCardsShowConverter}" UpdateSourceTrigger="PropertyChanged" />--><!--
+                                                </TextBlock.Text>
+                                                <TextBlock.FontSize>
+                                                    <Binding ElementName="currentCard" Path="ActualWidth" Mode="OneWay" ConverterParameter="cardText" Converter="{StaticResource basedCardWidthConverter}" UpdateSourceTrigger="PropertyChanged" />
+                                                </TextBlock.FontSize>
+                                            </TextBlock>
+                                            <TextBlock Name="deckAmountLabel" Text="{Binding Amount, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="#5A4424" TextAlignment="Center" 
+                                                    Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                         AncestorType={x:Type ItemsControl}},
+                                                         Path=Tag,Converter={StaticResource elementVisibilityConverter},ConverterParameter='deck'}" VerticalAlignment="Center">
+                                                <TextBlock.FontSize>
+                                                    <Binding ElementName="currentCard" Path="ActualWidth" Mode="OneWay" ConverterParameter="cardText" Converter="{StaticResource basedCardWidthConverter}" UpdateSourceTrigger="PropertyChanged" />
+                                                </TextBlock.FontSize>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>-->
+                        </Grid>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+            <!--### CONTROL TEMPLATE ###-->
+            <ControlTemplate x:Key="pickedCardFace" TargetType="ToggleButton" >
+                <Border BorderBrush="Black" BorderThickness="2" Margin="5" Height="{TemplateBinding ActualHeight}">
+                    <!--<Border.Height>
+                        <Binding ElementName="shownCardBorder" Path="ActualHeight" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </Border.Height>-->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="6*"/>
+                            <RowDefinition Height="2*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding Face, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                            </Grid.Background>
+                        </Grid>
+                        <Border Grid.Row="1" BorderThickness="0,2,0,0" BorderBrush="SaddleBrown" >
+                            <Border.Background>
+                                <ImageBrush ImageSource="images\cardDescription.png" Stretch="UniformToFill"/>
+                            </Border.Background>
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="10" Foreground="Maroon" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+            <ControlTemplate x:Key="circleBtn" TargetType="Button">
+                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border.CornerRadius>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <local:RoundRadiusConverter/>
+                            </MultiBinding.Converter>
+                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource TemplatedParent}"/>
+                            <Binding Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"/>
+                        </MultiBinding>
+                    </Border.CornerRadius>
+                    <Border.Width>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <local:RoundMathConverter/>
+                            </MultiBinding.Converter>
+                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource TemplatedParent}"/>
+                            <Binding Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"/>
+                        </MultiBinding>
+                    </Border.Width>
+                    <Border.Height>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <local:RoundMathConverter/>
+                            </MultiBinding.Converter>
+                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource TemplatedParent}"/>
+                            <Binding Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"/>
+                        </MultiBinding>
+                    </Border.Height>
+                    <Viewbox>
+                        <TextBlock>
+                             <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </TextBlock>
+                    </Viewbox>
+                </Border>
+            </ControlTemplate>
+        </Grid.Resources>
+        <!--<Grid.Background>
+            <ImageBrush ImageSource="images\bg1.png"/>
+        </Grid.Background>-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="18*"/>
+            <ColumnDefinition Width="64*"/>
+            <ColumnDefinition Width="18*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80*"/>
+                <RowDefinition Height="20*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="16.7*"/>
+                    <RowDefinition Height="16.7*"/>
+                    <RowDefinition Height="16.7*"/>
+                    <RowDefinition Height="16.7*"/>
+                    <RowDefinition Height="16.7*"/>
+                    <RowDefinition Height="16.7*"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="93*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="70*"/>
+                            <RowDefinition Height="15*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Background="#b0c4de" Template="{StaticResource circleBtn}">0</Button>
+                    </Grid>
+                    <Border Grid.Column="1" BorderThickness="8, 0, 0, 0" BorderBrush="#dcdcdc" CornerRadius="3" Margin="0, 3, 0, 0"/>
+                    <Border Grid.Column="1" BorderThickness="0, 0, 0, 3" BorderBrush="#cd853f" Margin="8, 3, 0, 0" Background="#a05220"/>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="93*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="70*"/>
+                            <RowDefinition Height="15*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Background="#b0c4de" Template="{StaticResource circleBtn}">1</Button>
+                    </Grid>
+                    <Border Grid.Column="1" BorderThickness="8, 0, 0, 0" BorderBrush="#dcdcdc" CornerRadius="3" Margin="0, 3, 0, 0"/>
+                    <Border Grid.Column="1" BorderThickness="0, 0, 0, 3" BorderBrush="#cd853f" Margin="8, 3, 0, 0" Background="#a05220"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="93*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="70*"/>
+                            <RowDefinition Height="15*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Background="#b0c4de" Template="{StaticResource circleBtn}">1</Button>
+                    </Grid>
+                    <Border Grid.Column="1" BorderThickness="8, 0, 0, 0" BorderBrush="#dcdcdc" CornerRadius="3" Margin="0, 3, 0, 0"/>
+                    <Border Grid.Column="1" BorderThickness="0, 0, 0, 3" BorderBrush="#cd853f" Margin="8, 3, 0, 0" Background="#a05220"/>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="93*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="70*"/>
+                            <RowDefinition Height="15*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Background="#daa520" Template="{StaticResource circleBtn}">1</Button>
+                    </Grid>
+                    <Border Grid.Column="1" BorderThickness="8, 0, 0, 0" BorderBrush="#dcdcdc" CornerRadius="3" Margin="0, 3, 0, 0"/>
+                    <Border Grid.Column="1" BorderThickness="0, 0, 0, 3" BorderBrush="#cd853f" Margin="8, 3, 0, 0" Background="#a05220">
+                        <ItemsControl x:Name="thrownCardList3">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="93*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="70*"/>
+                            <RowDefinition Height="15*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Background="#daa520" Template="{StaticResource circleBtn}">1</Button>
+                    </Grid>
+                    <Border Grid.Column="1" BorderThickness="8, 0, 0, 0" BorderBrush="#dcdcdc" CornerRadius="3" Margin="0, 3, 0, 0"/>
+                    <Border Grid.Column="1" BorderThickness="0, 0, 0, 3" BorderBrush="#cd853f" Margin="8, 3, 0, 0" Background="#a05220">
+                        <ItemsControl x:Name="thrownCardList2">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="93*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="70*"/>
+                            <RowDefinition Height="15*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Background="#daa520" Template="{StaticResource circleBtn}">0</Button>
+                    </Grid>
+                    <Border Grid.Column="1" BorderThickness="8, 0, 0, 0" BorderBrush="#dcdcdc" CornerRadius="3" Margin="0, 3, 0, 0"/>
+                    <Border Grid.Column="1" BorderThickness="0, 0, 0, 3" BorderBrush="#cd853f" Margin="8, 3, 0, 0" Background="#a05220" MouseLeftButtonUp="cardPickedToSet1">
+                        <ItemsControl x:Name="thrownCardList1">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition Width="93*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80*"/>
+                    <RowDefinition Height="20*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Column="1">
+                    <Border Background="#cd853f" Margin="8, 5, 0, 0">
+                        <ItemsControl Name="myCardSetList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <Border MouseLeftButtonUp="cardPickedToSet1" BorderBrush="Black" BorderThickness="1" Margin="20" Background="AliceBlue" Height="100">
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:2" From="Black" To="Chocolate" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"/>
+                                        <ThicknessAnimation Duration="0:0:2" From="1" To="4" Storyboard.TargetProperty="BorderThickness"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:2" From="Chocolate" To="Black" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"/>
+                                        <ThicknessAnimation Duration="0:0:2" From="4" To="1" Storyboard.TargetProperty="BorderThickness"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid  Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="25*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="1" x:Name="shownCardBorder">
+                <ToggleButton  x:Name="pickedCard" Template="{StaticResource pickedCardFace}" Visibility="Hidden"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
