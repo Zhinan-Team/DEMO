@@ -19,9 +19,7 @@
             <local:BlurConverter x:Key="blurConverter"/>
             <local:InfoColorConverter x:Key="infoColorConverter"/>
             <local:RemainingCardsShowConverter x:Key="remainingCardsShowConverter"/>
-            <local:SaveEnablityConverter x:Key="saveEnablityConverter"/>
-
-            
+            <local:SaveEnablityConverter x:Key="saveEnablityConverter"/>           
             <local:ColorConverter x:Key="colorConverter"/>
             <ControlTemplate x:Key="normalCardFace" TargetType="ToggleButton" >
                 <Border Height="160" Width="82" BorderBrush="Black" BorderThickness="2">
@@ -59,42 +57,6 @@
                 </Border>
             </ControlTemplate>
             <DataTemplate DataType="{x:Type local:CardFace}">
-                <!--<Border BorderBrush="Chocolate" BorderThickness="2"  Height="150" Width="100">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.Background>
-                            <ImageBrush ImageSource="{Binding Face, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
-                        </Grid.Background>
-
-                        <Ellipse Grid.Column="0" Grid.Row="0"  StrokeThickness="2" Stroke="Chocolate" Fill="White" Margin="0" />
-                        <Label Content="{Binding Power}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-
-                        <Ellipse Grid.Column="3" Grid.Row="5" StrokeThickness="2" Stroke="Chocolate" Margin="1" >
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding Range, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"></ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <Ellipse Visibility="{Binding Ability, Converter={StaticResource elementVisiblityConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="2" Grid.Row="5" StrokeThickness="2" Stroke="Chocolate" Margin="1">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding Ability, Converter={StaticResource imageDirConverter}, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"></ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                    </Grid>
-                </Border>-->
-
                 <Border Name="currentCard" BorderBrush="Black" BorderThickness="6" MouseUp="currentCardMouseUp" CornerRadius="2" Padding="0">
                     <Border.Visibility>
                         <MultiBinding Converter="{StaticResource cardCollapsedConverter}" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" >
@@ -140,24 +102,6 @@
                             <VisualBrush Visual="{Binding ElementName=radiusMask}" />
                         </Grid.OpacityMask>
                         <Border Name="radiusMask" Background="Black" BorderBrush="Transparent" BorderThickness="0.1" CornerRadius="6">
-
-                            <!--<Border.Triggers>
-                                <EventTrigger RoutedEvent="MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Duration="0:0:2" AutoReverse="True" RepeatBehavior="Forever" From="Black" To="Chocolate" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-
-                                <EventTrigger RoutedEvent="MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Duration="0:0:0" To="Black" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Border.Triggers>-->
                         </Border>
 
                         <Grid Grid.Row="0" Name="faceGrid">

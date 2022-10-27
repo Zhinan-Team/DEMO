@@ -30,6 +30,13 @@ namespace WznGwent
             cfgWin.Show();
             this.Close();
         }
+
+        private void playBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PlayWindow plyWin = new PlayWindow();
+            plyWin.Show();
+            this.Close();
+        }
     }
 
     //将输入double除以parameter再输出的转换器
